@@ -52,6 +52,10 @@ import okhttp3.Response;
 
 import static com.google.codelabs.appauth.MainApplication.LOG_TAG;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> RepairBranch2
 public class MainActivity extends AppCompatActivity {
 
 	private static final String SHARED_PREFERENCES_NAME = "AuthStatePreference";
