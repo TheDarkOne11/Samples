@@ -45,6 +45,7 @@ import net.openid.appauth.TokenResponse;
 import okio.Okio;
 
 import org.joda.time.format.DateTimeFormat;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -180,6 +181,24 @@ public class TokenActivity extends AppCompatActivity {
         findViewById(R.id.not_authorized).setVisibility(View.GONE);
 
         ((TextView)findViewById(R.id.loading_description)).setText(message);
+    }
+
+    private void displayApiInfo() {
+        //TODO display
+		this.displayAuthorized();
+		findViewById(R.id.userinfo_card).setVisibility(View.GONE);
+		TextView apiInfoView = findViewById(R.id.api_call_info);
+
+		StringBuilder stb = new StringBuilder();
+		try {
+			JSONArray lessons = mUserInfoJson.get().getJSONArray("events");
+			stb.append("Num of lessons: " + lessons.length() + "\n\n");
+
+			stb.append("Full received message:\n" + mUserInfoJson.get().toString());
+			apiInfoView.setText(stb.toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
     }
 
     @MainThread
@@ -362,7 +381,9 @@ public class TokenActivity extends AppCompatActivity {
 				showSnackbar("Failed to parse user info");
 			}
 
-			runOnUiThread(this::displayAuthorized);
+			// TODO here
+			runOnUiThread(this::displayApiInfo);
+//			runOnUiThread(this::displayAuthorized);
 		});
 	}
     @MainThread
