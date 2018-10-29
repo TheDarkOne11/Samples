@@ -16,6 +16,7 @@ package cz.cvut.fit.budikpet.appauth_fit;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
@@ -324,6 +325,7 @@ public class TokenActivity extends AppCompatActivity {
             //noinspection WrongThread
             runOnUiThread(() -> displayNotAuthorized(message));
         } else {
+            Log.i("ACCESS_TOKEN", tokenResponse.accessToken);
             runOnUiThread(this::displayAuthorized);
         }
     }
@@ -336,9 +338,33 @@ public class TokenActivity extends AppCompatActivity {
     @MainThread
     private void fetchUserInfo() {
         displayLoading("Fetching user info");
-        mStateManager.getCurrent().performActionWithFreshTokens(mAuthService, this::fetchUserInfo);
+        mStateManager.getCurrent().performActionWithFreshTokens(mAuthService, this::fetchCalendarData);
     }
 
+    private void fetchCalendarData(String accessToken, String idToken, AuthorizationException ex) {
+		mExecutor.submit(() -> {
+			try {
+				HttpURLConnection conn =
+						(HttpURLConnection) new URL("https://sirius.fit.cvut.cz/api/v1/people/budikpet/events?from=2018-10-29&to=2018-10-30")
+								.openConnection();
+				conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+
+				conn.setInstanceFollowRedirects(false);
+				String response = Okio.buffer(Okio.source(conn.getInputStream()))
+						.readString(Charset.forName("UTF-8"));
+				Log.i("TEST_OUTPUT", response);
+				mUserInfoJson.set(new JSONObject(response));
+			} catch (IOException ioEx) {
+				Log.e(TAG, "Network error when querying userinfo endpoint", ioEx);
+				showSnackbar("Fetching user info failed");
+			} catch (JSONException jsonEx) {
+				Log.e(TAG, "Failed to parse userinfo response");
+				showSnackbar("Failed to parse user info");
+			}
+
+			runOnUiThread(this::displayAuthorized);
+		});
+	}
     @MainThread
     private void fetchUserInfo(String accessToken, String idToken, AuthorizationException ex) {
         if (ex != null) {
