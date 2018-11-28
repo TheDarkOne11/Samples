@@ -16,6 +16,7 @@ package cz.cvut.fit.budikpet.appauth_fit;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
@@ -44,6 +45,7 @@ import net.openid.appauth.TokenResponse;
 import okio.Okio;
 
 import org.joda.time.format.DateTimeFormat;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -179,6 +181,24 @@ public class TokenActivity extends AppCompatActivity {
         findViewById(R.id.not_authorized).setVisibility(View.GONE);
 
         ((TextView)findViewById(R.id.loading_description)).setText(message);
+    }
+
+    private void displayApiInfo() {
+        //TODO display
+		this.displayAuthorized();
+		findViewById(R.id.userinfo_card).setVisibility(View.GONE);
+		TextView apiInfoView = findViewById(R.id.api_call_info);
+
+		StringBuilder stb = new StringBuilder();
+		try {
+			JSONArray lessons = mUserInfoJson.get().getJSONArray("events");
+			stb.append("Num of lessons: " + lessons.length() + "\n\n");
+
+			stb.append("Full received message:\n" + mUserInfoJson.get().toString());
+			apiInfoView.setText(stb.toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
     }
 
     @MainThread
@@ -324,6 +344,7 @@ public class TokenActivity extends AppCompatActivity {
             //noinspection WrongThread
             runOnUiThread(() -> displayNotAuthorized(message));
         } else {
+            Log.i("ACCESS_TOKEN", tokenResponse.accessToken);
             runOnUiThread(this::displayAuthorized);
         }
     }
@@ -336,9 +357,35 @@ public class TokenActivity extends AppCompatActivity {
     @MainThread
     private void fetchUserInfo() {
         displayLoading("Fetching user info");
-        mStateManager.getCurrent().performActionWithFreshTokens(mAuthService, this::fetchUserInfo);
+        mStateManager.getCurrent().performActionWithFreshTokens(mAuthService, this::fetchCalendarData);
     }
 
+    private void fetchCalendarData(String accessToken, String idToken, AuthorizationException ex) {
+		mExecutor.submit(() -> {
+			try {
+				HttpURLConnection conn =
+						(HttpURLConnection) new URL("https://sirius.fit.cvut.cz/api/v1/people/budikpet/events?from=2018-10-29&to=2018-10-30")
+								.openConnection();
+				conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+
+				conn.setInstanceFollowRedirects(false);
+				String response = Okio.buffer(Okio.source(conn.getInputStream()))
+						.readString(Charset.forName("UTF-8"));
+				Log.i("TEST_OUTPUT", response);
+				mUserInfoJson.set(new JSONObject(response));
+			} catch (IOException ioEx) {
+				Log.e(TAG, "Network error when querying userinfo endpoint", ioEx);
+				showSnackbar("Fetching user info failed");
+			} catch (JSONException jsonEx) {
+				Log.e(TAG, "Failed to parse userinfo response");
+				showSnackbar("Failed to parse user info");
+			}
+
+			// TODO here
+			runOnUiThread(this::displayApiInfo);
+//			runOnUiThread(this::displayAuthorized);
+		});
+	}
     @MainThread
     private void fetchUserInfo(String accessToken, String idToken, AuthorizationException ex) {
         if (ex != null) {
