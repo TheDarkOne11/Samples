@@ -14,8 +14,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<resources>
-    <color name="title_background">#ff355689</color>
-    <color name="title_text">#ffffffff</color>
-    <color name="title_separator">#40ffffff</color>
-</resources>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:maxLevel="0" android:drawable="@drawable/ic_title_add_light"/>
+    <item android:maxLevel="1" android:drawable="@drawable/ic_title_add_alt"/>
+</level-list>
