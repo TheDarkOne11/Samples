@@ -14,6 +14,7 @@
 
 package cz.cvut.fit.budikpet.googlecalendarsample;
 
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -141,8 +142,8 @@ public final class CalendarSampleActivity extends Activity {
 	public void showGooglePlayServicesAvailabilityErrorDialog(final int connectionStatusCode) {
 		runOnUiThread(new Runnable() {
 			public void run() {
-				Dialog dialog = GooglePlayServicesUtil.getErrorDialog(
-						connectionStatusCode, CalendarSampleActivity.this, REQUEST_GOOGLE_PLAY_SERVICES);
+				Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(
+						CalendarSampleActivity.this, connectionStatusCode, REQUEST_GOOGLE_PLAY_SERVICES);
 				dialog.show();
 			}
 		});
@@ -301,8 +302,8 @@ public final class CalendarSampleActivity extends Activity {
 	 * Check that Google Play services APK is installed and up to date.
 	 */
 	private boolean checkGooglePlayServicesAvailable() {
-		final int connectionStatusCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-		if (GooglePlayServicesUtil.isUserRecoverableError(connectionStatusCode)) {
+		final int connectionStatusCode = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
+		if (GoogleApiAvailability.getInstance().isUserResolvableError(connectionStatusCode)) {
 			showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
 			return false;
 		}
