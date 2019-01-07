@@ -25,7 +25,7 @@ import cz.cvut.fit.budikpet.googlecalendarsample.R;
 /**
  * Activity to add or edit a calendar.
  * 
- * @author Yaniv Inbar
+ *
  */
 public class AddOrEditCalendarActivity extends Activity {
 

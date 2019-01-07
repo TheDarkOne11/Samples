@@ -50,19 +50,18 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import cz.cvut.fit.budikpet.googlecalendarsample.asyncOperations.AsyncBatchInsertCalendars;
+import cz.cvut.fit.budikpet.googlecalendarsample.asyncOperations.AsyncDeleteCalendar;
+import cz.cvut.fit.budikpet.googlecalendarsample.asyncOperations.AsyncInsertCalendar;
+import cz.cvut.fit.budikpet.googlecalendarsample.asyncOperations.AsyncLoadCalendars;
+import cz.cvut.fit.budikpet.googlecalendarsample.asyncOperations.AsyncUpdateCalendar;
+
 /**
+ * Main activity.
  * Sample activity for Google Calendar API v3. It demonstrates how to use authorization to list
  * calendars, add a new calendar, and edit or delete an existing calendar with the user's
  * permission.
  *
- * <p>
- * <b>Warning:</b> this sample is for illustrative purposes only. Please instead use the native
- * Calendar APIs like the <a
- * href="http://developer.android.com/guide/topics/providers/calendar-provider.html">Calendar
- * Provider API</a>.
- * </p>
- *
- * @author Yaniv Inbar
  */
 public final class CalendarSampleActivity extends Activity {
 
@@ -81,7 +80,7 @@ public final class CalendarSampleActivity extends Activity {
 
 	private static final String PREF_ACCOUNT_NAME = "accountName";
 
-	static final String TAG = "CalendarSampleActivity";
+	public static final String TAG = "CalendarSampleActivity";
 
 	private static final int CONTEXT_EDIT = 0;
 
@@ -89,26 +88,26 @@ public final class CalendarSampleActivity extends Activity {
 
 	private static final int CONTEXT_BATCH_ADD = 2;
 
-	static final int REQUEST_GOOGLE_PLAY_SERVICES = 0;
+	public static final int REQUEST_GOOGLE_PLAY_SERVICES = 0;
 
-	static final int REQUEST_AUTHORIZATION = 1;
+	public static final int REQUEST_AUTHORIZATION = 1;
 
-	static final int REQUEST_ACCOUNT_PICKER = 2;
+	public static final int REQUEST_ACCOUNT_PICKER = 2;
 
 	private final static int ADD_OR_EDIT_CALENDAR_REQUEST = 3;
 
-	final HttpTransport transport = AndroidHttp.newCompatibleTransport();
+	public final HttpTransport transport = AndroidHttp.newCompatibleTransport();
 
-	final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+	public final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
-	GoogleAccountCredential credential;
+	public GoogleAccountCredential credential;
 
-	CalendarModel model = new CalendarModel();
+	public CalendarModel model = new CalendarModel();
 
-	ArrayAdapter<CalendarInfo> adapter;
+	public ArrayAdapter<CalendarInfo> adapter;
 
-	com.google.api.services.calendar.Calendar client;
-	int numAsyncTasks;
+	public com.google.api.services.calendar.Calendar client;
+	public int numAsyncTasks;
 
 	private ListView listView;
 
@@ -133,7 +132,7 @@ public final class CalendarSampleActivity extends Activity {
 				.build();
 	}
 
-	void showGooglePlayServicesAvailabilityErrorDialog(final int connectionStatusCode) {
+	public void showGooglePlayServicesAvailabilityErrorDialog(final int connectionStatusCode) {
 		runOnUiThread(new Runnable() {
 			public void run() {
 				Dialog dialog = GooglePlayServicesUtil.getErrorDialog(
@@ -143,7 +142,7 @@ public final class CalendarSampleActivity extends Activity {
 		});
 	}
 
-	void refreshView() {
+	public void refreshView() {
 		adapter = new ArrayAdapter<CalendarInfo>(
 				this, android.R.layout.simple_list_item_1, model.toSortedArray()) {
 

@@ -26,31 +26,31 @@ import java.util.Map;
 /**
  * Thread-safe model for the Google calendars.
  *
- * @author Yaniv Inbar
+ *
  */
-class CalendarModel {
+public class CalendarModel {
 
 	private final Map<String, CalendarInfo> calendars = new HashMap<String, CalendarInfo>();
 
-	int size() {
+	public int size() {
 		synchronized (calendars) {
 			return calendars.size();
 		}
 	}
 
-	void remove(String id) {
+	public void remove(String id) {
 		synchronized (calendars) {
 			calendars.remove(id);
 		}
 	}
 
-	CalendarInfo get(String id) {
+	public CalendarInfo get(String id) {
 		synchronized (calendars) {
 			return calendars.get(id);
 		}
 	}
 
-	void add(Calendar calendarToAdd) {
+	public void add(Calendar calendarToAdd) {
 		synchronized (calendars) {
 			CalendarInfo found = get(calendarToAdd.getId());
 			if (found == null) {
@@ -61,7 +61,7 @@ class CalendarModel {
 		}
 	}
 
-	void add(CalendarListEntry calendarToAdd) {
+	public void add(CalendarListEntry calendarToAdd) {
 		synchronized (calendars) {
 			CalendarInfo found = get(calendarToAdd.getId());
 			if (found == null) {
@@ -72,7 +72,7 @@ class CalendarModel {
 		}
 	}
 
-	void reset(List<CalendarListEntry> calendarsToAdd) {
+	public void reset(List<CalendarListEntry> calendarsToAdd) {
 		synchronized (calendars) {
 			calendars.clear();
 			for (CalendarListEntry calendarToAdd : calendarsToAdd) {

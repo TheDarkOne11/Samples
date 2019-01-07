@@ -12,31 +12,33 @@
  * the License.
  */
 
-package cz.cvut.fit.budikpet.googlecalendarsample;
+package cz.cvut.fit.budikpet.googlecalendarsample.asyncOperations;
 
-import com.google.api.services.calendar.model.Calendar;
+import com.google.api.services.calendar.model.CalendarList;
 
 import java.io.IOException;
 
+import cz.cvut.fit.budikpet.googlecalendarsample.CalendarInfo;
 import cz.cvut.fit.budikpet.googlecalendarsample.CalendarSampleActivity;
 
 /**
- * Asynchronously insert a new calendar.
+ * Asynchronously load the calendars.
  *
- * @author Yaniv Inbar
+ *
  */
-class AsyncInsertCalendar extends cz.cvut.fit.budikpet.googlecalendarsample.CalendarAsyncTask {
+public class AsyncLoadCalendars extends CalendarAsyncTask {
 
-	private final Calendar entry;
-
-	AsyncInsertCalendar(CalendarSampleActivity calendarSample, Calendar entry) {
+	public AsyncLoadCalendars(CalendarSampleActivity calendarSample) {
 		super(calendarSample);
-		this.entry = entry;
 	}
 
 	@Override
 	protected void doInBackground() throws IOException {
-		Calendar calendar = client.calendars().insert(entry).setFields(cz.cvut.fit.budikpet.googlecalendarsample.CalendarInfo.FIELDS).execute();
-		model.add(calendar);
+		CalendarList feed = client.calendarList().list().setFields(CalendarInfo.FEED_FIELDS).execute();
+		model.reset(feed.getItems());
+	}
+
+	public static void run(CalendarSampleActivity calendarSample) {
+		new AsyncLoadCalendars(calendarSample).execute();
 	}
 }

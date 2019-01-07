@@ -26,7 +26,6 @@ import android.widget.Toast;
 /**
  * Common utilities.
  *
- * @author Yaniv Inbar
  */
 public class Utils {
 

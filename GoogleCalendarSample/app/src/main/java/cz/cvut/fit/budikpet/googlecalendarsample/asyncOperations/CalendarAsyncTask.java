@@ -12,30 +12,35 @@
  * the License.
  */
 
-package cz.cvut.fit.budikpet.googlecalendarsample;
-
-import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
-
+package cz.cvut.fit.budikpet.googlecalendarsample.asyncOperations;
 import android.os.AsyncTask;
 import android.view.View;
 
+import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.services.calendar.Calendar;
+
 import java.io.IOException;
+
+import cz.cvut.fit.budikpet.googlecalendarsample.CalendarModel;
+import cz.cvut.fit.budikpet.googlecalendarsample.CalendarSampleActivity;
+import cz.cvut.fit.budikpet.googlecalendarsample.R;
+import cz.cvut.fit.budikpet.googlecalendarsample.Utils;
 
 /**
  * Asynchronous task that also takes care of common needs, such as displaying progress,
  * authorization, exception handling, and notifying UI when operation succeeded.
  *
- * @author Yaniv Inbar
+ *
  */
-abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
+public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
-	final CalendarSampleActivity activity;
-	final CalendarModel model;
-	final com.google.api.services.calendar.Calendar client;
+	public final CalendarSampleActivity activity;
+	public final CalendarModel model;
+	public final Calendar client;
 	private final View progressBar;
 
-	CalendarAsyncTask(CalendarSampleActivity activity) {
+	public CalendarAsyncTask(CalendarSampleActivity activity) {
 		this.activity = activity;
 		model = activity.model;
 		client = activity.client;

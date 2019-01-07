@@ -12,7 +12,7 @@
  * the License.
  */
 
-package cz.cvut.fit.budikpet.googlecalendarsample;
+package cz.cvut.fit.budikpet.googlecalendarsample.asyncOperations;
 
 import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.batch.json.JsonBatchCallback;
@@ -28,13 +28,13 @@ import cz.cvut.fit.budikpet.googlecalendarsample.CalendarSampleActivity;
 /**
  * Asynchronously insert a new calendar.
  *
- * @author Yaniv Inbar
+ *
  */
-class AsyncBatchInsertCalendars extends cz.cvut.fit.budikpet.googlecalendarsample.CalendarAsyncTask {
+public class AsyncBatchInsertCalendars extends CalendarAsyncTask {
 
 	private final List<Calendar> calendars;
 
-	AsyncBatchInsertCalendars(CalendarSampleActivity calendarSample, List<Calendar> calendars) {
+	public AsyncBatchInsertCalendars(CalendarSampleActivity calendarSample, List<Calendar> calendars) {
 		super(calendarSample);
 		this.calendars = calendars;
 	}

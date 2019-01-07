@@ -12,38 +12,31 @@
  * the License.
  */
 
-package cz.cvut.fit.budikpet.googlecalendarsample;
+package cz.cvut.fit.budikpet.googlecalendarsample.asyncOperations;
 
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.services.calendar.model.Calendar;
 
 import java.io.IOException;
 
 import cz.cvut.fit.budikpet.googlecalendarsample.CalendarSampleActivity;
 
 /**
- * Asynchronously delete a calendar.
+ * Asynchronously insert a new calendar.
  *
- * @author Yaniv Inbar
+ *
  */
-class AsyncDeleteCalendar extends cz.cvut.fit.budikpet.googlecalendarsample.CalendarAsyncTask {
+public class AsyncInsertCalendar extends CalendarAsyncTask {
 
-	private final String calendarId;
+	private final Calendar entry;
 
-	AsyncDeleteCalendar(CalendarSampleActivity calendarSample, cz.cvut.fit.budikpet.googlecalendarsample.CalendarInfo calendarInfo) {
+	public AsyncInsertCalendar(CalendarSampleActivity calendarSample, Calendar entry) {
 		super(calendarSample);
-		calendarId = calendarInfo.id;
+		this.entry = entry;
 	}
 
 	@Override
 	protected void doInBackground() throws IOException {
-		try {
-			client.calendars().delete(calendarId).execute();
-		} catch (GoogleJsonResponseException e) {
-			// 404 Not Found would happen if user tries to delete an already deleted calendar
-			if (e.getStatusCode() != 404) {
-				throw e;
-			}
-		}
-		model.remove(calendarId);
+		Calendar calendar = client.calendars().insert(entry).setFields(cz.cvut.fit.budikpet.googlecalendarsample.CalendarInfo.FIELDS).execute();
+		model.add(calendar);
 	}
 }
