@@ -121,17 +121,23 @@ public final class CalendarSampleActivity extends Activity {
 		setContentView(R.layout.calendarlist);
 		listView = findViewById(R.id.list);
 		registerForContextMenu(listView);
+
 		// Google Accounts
 		credential =
 				GoogleAccountCredential.usingOAuth2(this, Collections.singleton(CalendarScopes.CALENDAR));
 		SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
 		credential.setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
+
 		// Calendar client
 		client = new com.google.api.services.calendar.Calendar.Builder(
 				transport, jsonFactory, credential).setApplicationName("Google-CalendarAndroidSample/1.0")
 				.build();
 	}
 
+	/**
+	 * Dialog window shown when Google Play services are unavailable.
+	 * @param connectionStatusCode
+	 */
 	public void showGooglePlayServicesAvailabilityErrorDialog(final int connectionStatusCode) {
 		runOnUiThread(new Runnable() {
 			public void run() {
@@ -166,6 +172,12 @@ public final class CalendarSampleActivity extends Activity {
 		}
 	}
 
+	/**
+	 * Check for results of all activities that can be executed from this activity.
+	 * @param requestCode
+	 * @param resultCode
+	 * @param data
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -212,6 +224,8 @@ public final class CalendarSampleActivity extends Activity {
 				break;
 		}
 	}
+
+	// MARK: NavBar methods.
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
