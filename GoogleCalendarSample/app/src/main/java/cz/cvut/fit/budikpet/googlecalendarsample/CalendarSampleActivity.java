@@ -310,6 +310,9 @@ public final class CalendarSampleActivity extends Activity {
 		return true;
 	}
 
+	/**
+	 * Checks if the user has already signed in to a Google Play account.
+	 */
 	private void haveGooglePlayServices() {
 		// check if there is already an account selected
 		if (credential.getSelectedAccountName() == null) {
