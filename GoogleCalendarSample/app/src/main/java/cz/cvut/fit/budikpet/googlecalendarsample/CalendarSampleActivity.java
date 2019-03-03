@@ -14,16 +14,7 @@
 
 package cz.cvut.fit.budikpet.googlecalendarsample;
 
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.services.calendar.model.Calendar;
-
+import android.Manifest;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -32,7 +23,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -44,6 +39,15 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.model.Calendar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -133,6 +137,37 @@ public final class CalendarSampleActivity extends Activity {
 		client = new com.google.api.services.calendar.Calendar.Builder(
 				transport, jsonFactory, credential).setApplicationName("Google-CalendarAndroidSample/1.0")
 				.build();
+
+		checkPermissions();
+	}
+
+	private void checkPermissions() {
+		ArrayList<String> list = new ArrayList<>();
+		list.add(Manifest.permission.INTERNET);
+		list.add(Manifest.permission.GET_ACCOUNTS);
+		list.add(Manifest.permission.READ_CALENDAR);
+		list.add(Manifest.permission.WRITE_CALENDAR);
+		list.add(Manifest.permission.READ_CONTACTS);
+		list.add(Manifest.permission.WRITE_CONTACTS);
+
+		for(String perm: list) {
+			if (ContextCompat.checkSelfPermission(this, perm)
+					!= PackageManager.PERMISSION_GRANTED) {
+				Log.i("PERM_TEST", perm + " is not granted.");
+				askForPermission(perm);
+			} else {
+				Log.i("PERM_TEST", perm + " was granted.");
+			}
+		}
+	}
+
+	private void askForPermission(String permission) {
+		int REQUEST_CODE_ASK_PERMISSIONS = 123;
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			requestPermissions(new String[] {permission},
+					REQUEST_CODE_ASK_PERMISSIONS);
+		}
 	}
 
 	/**
