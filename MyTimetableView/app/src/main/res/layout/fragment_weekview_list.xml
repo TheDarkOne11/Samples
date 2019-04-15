@@ -1,10 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+
+<ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".WeekViewFragment"
-        android:orientation="vertical"/>
+        android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:id="@+id/timetableHolder">
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:id="@+id/events_columns"
+                android:showDividers="middle"
+                android:divider="@drawable/row_item_divider"
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="visible">
+            <android.support.constraint.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/eventColumn0" android:layout_weight="1"/>
+
+            <android.support.constraint.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:id="@+id/eventColumn1"/>
+
+            <android.support.constraint.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/eventColumn2"
+                    android:layout_weight="2">
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="300dp" android:id="@+id/view9"
+                        android:background="@android:color/holo_blue_bright" app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginTop="200dp" android:layout_marginStart="2dp"
+                        android:layout_marginEnd="2dp" android:text="Hello World, How are you doing?"/>
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/eventColumn3"
+                    android:layout_weight="2">
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="150dp" android:id="@+id/view"
+                        android:background="@color/divider_grey"
+                        android:text="Hello World, How are you doing?"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/view2"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        android:layout_marginTop="200dp"
+                        android:layout_marginStart="2dp"/>
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="200dp" android:id="@+id/view2"
+                        android:text="Hello World, How are you doing?"
+                        android:layout_marginEnd="2dp"
+                        android:layout_marginTop="100dp"
+                        android:background="@android:color/holo_blue_bright"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/view"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                />
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:id="@+id/eventColumn4"/>
+
+            <android.support.constraint.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:id="@+id/eventColumn5"/>
+
+            <android.support.constraint.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:id="@+id/eventColumn6"/>
+
+            <android.support.constraint.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:id="@+id/eventColumn7"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/timeRowsList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".WeekViewFragment"
+                android:orientation="vertical" app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="visible"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</ScrollView>
