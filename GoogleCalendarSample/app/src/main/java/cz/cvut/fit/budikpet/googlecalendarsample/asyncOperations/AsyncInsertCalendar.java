@@ -18,6 +18,7 @@ import com.google.api.services.calendar.model.Calendar;
 
 import java.io.IOException;
 
+import cz.cvut.fit.budikpet.googlecalendarsample.CalendarInfo;
 import cz.cvut.fit.budikpet.googlecalendarsample.CalendarSampleActivity;
 
 /**
@@ -36,7 +37,7 @@ public class AsyncInsertCalendar extends CalendarAsyncTask {
 
 	@Override
 	protected void doInBackground() throws IOException {
-		Calendar calendar = client.calendars().insert(entry).setFields(cz.cvut.fit.budikpet.googlecalendarsample.CalendarInfo.FIELDS).execute();
+		Calendar calendar = client.calendars().insert(entry).setFields(CalendarInfo.FIELDS).execute();
 		model.add(calendar);
 	}
 }

@@ -141,6 +141,14 @@ public final class CalendarSampleActivity extends Activity {
 		checkPermissions();
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (checkGooglePlayServicesAvailable()) {
+			haveGooglePlayServices();
+		}
+	}
+
 	private void checkPermissions() {
 		ArrayList<String> list = new ArrayList<>();
 		list.add(Manifest.permission.INTERNET);
@@ -198,14 +206,6 @@ public final class CalendarSampleActivity extends Activity {
 			}
 		};
 		listView.setAdapter(adapter);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		if (checkGooglePlayServicesAvailable()) {
-			haveGooglePlayServices();
-		}
 	}
 
 	/**
