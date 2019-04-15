@@ -6,13 +6,17 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.constraint.ConstraintSet
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
+import cz.budikpet.mytimetableview.dummy.DummyContent
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), WeekViewFragment.OnListFragmentInteractionListener {
     private var padding = 2
+
+    private lateinit var weekViewFragment: WeekViewFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         val view0 = TextView(this)
         view0.text = "Lonely event, How are you doing?"
         view0.setBackgroundColor(Color.LTGRAY)
-        view0.height = 50f.toDp(this)
+        view0.height = 150f.toDp(this)
 
         val view = TextView(this)
         view.text = "Chain one, How are you doing?"
@@ -37,7 +41,19 @@ class MainActivity : AppCompatActivity() {
         view2.height = 200f.toDp(this)
 
         addOverlapingEvents(column, arrayOf(view, view2), arrayOf(200f.toDp(this), 150f.toDp(this)))
-        addEvent(column, view0, 10f.toDp(this))
+        addEvent(column, view0, 900f.toDp(this))
+
+
+        if (savedInstanceState == null) {
+            //        "${item.hourOfDay()}:${item.minuteOfHour()}"
+            weekViewFragment = WeekViewFragment.newInstance(7, arrayListOf("time"))
+
+            supportFragmentManager.beginTransaction()
+                .add(R.id.weekViewFragment, weekViewFragment)
+                .commit()
+        } else {
+            weekViewFragment = supportFragmentManager.findFragmentById(R.id.weekViewFragment) as WeekViewFragment
+        }
     }
 
     fun addEvent(constLayout: ConstraintLayout, event: View, startsDp: Int) {
@@ -92,6 +108,18 @@ class MainActivity : AppCompatActivity() {
 
         set.applyTo(constLayout)
 
+    }
+
+    override fun onListFragmentInteraction(item: DummyContent.DummyItem?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onEmptySpaceClicked() {
+        Log.i("MY_", "Empty space clicked.")
+    }
+
+    override fun onEventClicked() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
 
