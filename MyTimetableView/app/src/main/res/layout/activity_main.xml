@@ -22,15 +22,7 @@
             <android.support.constraint.ConstraintLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:id="@+id/eventColumn0" android:layout_weight="1">
-                <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="200dp" android:id="@+id/view6"
-                        android:background="@android:color/holo_blue_bright" app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="200dp" android:layout_marginStart="2dp"
-                        android:layout_marginEnd="2dp" android:text="Hello World, How are you doing?"/>
-            </android.support.constraint.ConstraintLayout>
+                    android:id="@+id/eventColumn0" android:layout_weight="1"/>
 
             <android.support.constraint.ConstraintLayout
                     android:layout_width="0dp"
