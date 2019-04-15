@@ -7,37 +7,4 @@
     <string name="thu">Thur</string>
     <string name="fri">Fri</string>
     <string name="sat">Sat</string>
-    <string name="time12am">00:00</string>
-    <string name="time1am">01:00</string>
-    <string name="time2am">02:00</string>
-    <string name="time3am">03:00</string>
-    <string name="time4am">04:00</string>
-    <string name="time5am">05:00</string>
-    <string name="time6am">05:00</string>
-    <string name="time7am">05:00</string>
-    <string name="time8am">05:00</string>
-    <string name="time9am">05:00</string>
-    <string name="time10am">05:00</string>
-    <string name="time11am">05:00</string>
-    <string name="time12pm">12:00</string>
-    <string name="time1pm">13:00</string>
-    <string name="time2pm">13:00</string>
-    <string name="time3pm">13:00</string>
-    <string name="time4pm">13:00</string>
-    <string name="time5pm">13:00</string>
-    <string name="time6pm">13:00</string>
-    <string name="time7pm">13:00</string>
-    <string name="time8pm">13:00</string>
-    <string name="time9pm">13:00</string>
-    <string name="time10pm">13:00</string>
-    <string name="time11pm">13:00</string>
-    <string name="updating">Updating</string>
-    <string name="monday_letter">Mon</string>
-    <string name="tuesday_letter">Tue</string>
-    <string name="wednesday_letter">Wed</string>
-    <string name="thursday_letter">Thu</string>
-    <string name="friday_letter">Fri</string>
-    <string name="saturday_letter">Sat</string>
-    <string name="sunday_letter">Sun</string>
-
 </resources>

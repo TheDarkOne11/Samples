@@ -6,19 +6,17 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.constraint.ConstraintSet
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
-import cz.budikpet.mytimetableview.dummy.DummyContent
 
 
-class MainActivity : AppCompatActivity(), TimetableFragment.OnListFragmentInteractionListener {
+class MainActivity : AppCompatActivity() {
     private var padding = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.test)
+        setContentView(R.layout.activity_main)
 
         padding = 2f.toDp(this)
         val column = findViewById<ConstraintLayout>(R.id.eventColumn1)
@@ -94,10 +92,6 @@ class MainActivity : AppCompatActivity(), TimetableFragment.OnListFragmentIntera
 
         set.applyTo(constLayout)
 
-    }
-
-    override fun onListFragmentInteraction(item: DummyContent.DummyItem?) {
-        Log.i("MY_", "$item")
     }
 }
 

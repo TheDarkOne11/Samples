@@ -2,14 +2,12 @@ package cz.budikpet.mytimetableview
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import org.junit.Assert.*
-
 /**
- * Instrumented test, which will execute on an Android device.
+ * Instrumented activity_main, which will execute on an Android device.
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
@@ -17,7 +15,7 @@ import org.junit.Assert.*
 class ExampleInstrumentedTest {
     @Test
     fun useAppContext() {
-        // Context of the app under test.
+        // Context of the app under activity_main.
         val appContext = InstrumentationRegistry.getTargetContext()
         assertEquals("cz.budikpet.mytimetableview", appContext.packageName)
     }
