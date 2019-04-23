@@ -56,7 +56,7 @@ class WeekViewFragment : Fragment() {
 
         timeRows.forEach {
             val rowView = getTimeRow(inflater)  // TODO: Create copies of this view
-            rowView.timeText.text = it
+            rowView.timeTextView.text = it
 
             listLayout.addView(rowView)
         }
