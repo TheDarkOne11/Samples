@@ -61,6 +61,8 @@ class WeekViewFragment : Fragment() {
             listLayout.addView(rowView)
         }
 
+        createDynamicEvents()
+
         return layout
     }
 
@@ -117,7 +119,7 @@ class WeekViewFragment : Fragment() {
 
         val view0 = TextView(context!!)
         view0.text = "Lonely event, How are you doing?"
-        view0.setBackgroundColor(Color.LTGRAY)
+        view0.setBackgroundColor(Color.RED)
         view0.height = 150f.toDp(context!!)
 
         val view = TextView(context!!)
@@ -131,7 +133,7 @@ class WeekViewFragment : Fragment() {
         view2.height = 200f.toDp(context!!)
 
         addOverlapingEvents(column, arrayOf(view, view2), arrayOf(200f.toDp(context!!), 150f.toDp(context!!)))
-        addEvent(column, view0, 900f.toDp(context!!))
+        addEvent(column, view0, 100f.toDp(context!!))
     }
 
     private fun addEvent(constLayout: ConstraintLayout, event: View, startsDp: Int) {
