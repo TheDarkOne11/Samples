@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import org.joda.time.DateTime
+import org.joda.time.DateTimeConstants
 
 
 class MainActivity : AppCompatActivity(), WeekViewFragment.OnListFragmentInteractionListener {
@@ -13,6 +14,9 @@ class MainActivity : AppCompatActivity(), WeekViewFragment.OnListFragmentInterac
     private lateinit var weekViewFragment: WeekViewFragment
 
     private lateinit var sharedPreferences: SharedPreferences
+
+    private val mondayDate = DateTime().withDayOfWeek(DateTimeConstants.MONDAY)
+        .withTime(0, 0, 0, 0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +27,7 @@ class MainActivity : AppCompatActivity(), WeekViewFragment.OnListFragmentInterac
 
         if (savedInstanceState == null) {
             //        "${item.hourOfDay()}:${item.minuteOfHour()}"
-            weekViewFragment = WeekViewFragment.newInstance(7)
+            weekViewFragment = WeekViewFragment.newInstance(7, mondayDate)
 
             supportFragmentManager.beginTransaction()
                 .add(R.id.weekViewFragment, weekViewFragment)
