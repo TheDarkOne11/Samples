@@ -1,24 +1,29 @@
 package cz.budikpet.mytimetableview
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.util.TypedValue
+import org.joda.time.DateTime
 
 
 class MainActivity : AppCompatActivity(), WeekViewFragment.OnListFragmentInteractionListener {
 
     private lateinit var weekViewFragment: WeekViewFragment
 
+    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        sharedPreferences =  getSharedPreferences("Pref", Context.MODE_PRIVATE)
+        setPreferences()
 
         if (savedInstanceState == null) {
             //        "${item.hourOfDay()}:${item.minuteOfHour()}"
-            weekViewFragment = WeekViewFragment.newInstance(7, arrayListOf("10:00", "12:00", "14:00"))
+            weekViewFragment = WeekViewFragment.newInstance(7)
 
             supportFragmentManager.beginTransaction()
                 .add(R.id.weekViewFragment, weekViewFragment)
@@ -26,6 +31,20 @@ class MainActivity : AppCompatActivity(), WeekViewFragment.OnListFragmentInterac
         } else {
             weekViewFragment = supportFragmentManager.findFragmentById(R.id.weekViewFragment) as WeekViewFragment
         }
+    }
+
+    private fun setPreferences() {
+        // Prepare needed preferences for the WeekViewFragment
+
+        val lessonsStartTime = DateTime().withTime(7, 30, 0, 0).millisOfDay
+
+        sharedPreferences.edit {
+            it.putInt(SharedPreferencesKeys.NUM_OF_LESSONS.toString(), 8)
+            it.putInt(SharedPreferencesKeys.LESSONS_START_TIME.toString(), lessonsStartTime)
+            it.putInt(SharedPreferencesKeys.LENGTH_OF_BREAK.toString(), 15)
+            it.putInt(SharedPreferencesKeys.LENGTH_OF_LESSON.toString(), 90)
+        }
+
     }
 
     override fun onListFragmentInteraction() {
@@ -39,12 +58,4 @@ class MainActivity : AppCompatActivity(), WeekViewFragment.OnListFragmentInterac
     override fun onEventClicked() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-}
-
-fun Float.toDp(context: Context): Int {
-    return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP,
-        this,
-        context.resources.displayMetrics
-    ).toInt()
 }

@@ -1,6 +1,7 @@
 package cz.budikpet.mytimetableview
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
@@ -15,6 +16,7 @@ import android.widget.TextView
 
 import kotlinx.android.synthetic.main.fragment_weekview_list.view.*
 import kotlinx.android.synthetic.main.week_row.view.*
+import org.joda.time.DateTime
 
 /**
  * A fragment representing a list of Items.
@@ -23,7 +25,6 @@ import kotlinx.android.synthetic.main.week_row.view.*
  */
 class WeekViewFragment : Fragment() {
     private var columnCount = MAX_COLUMN
-    private lateinit var timeRows: ArrayList<String>
 
     private var listener: OnListFragmentInteractionListener? = null
     private lateinit var onEmptySpaceClickListener: View.OnClickListener
@@ -31,14 +32,17 @@ class WeekViewFragment : Fragment() {
     private lateinit var eventsColumns: LinearLayout
     private var padding = 2
 
+    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         padding = 2f.toDp(context!!)
 
+        sharedPreferences = context!!.getSharedPreferences("Pref", Context.MODE_PRIVATE)
+
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
-            timeRows = it.getStringArrayList(ARG_TIME_ROWS)
         }
 
         onEmptySpaceClickListener = View.OnClickListener {
@@ -51,12 +55,19 @@ class WeekViewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val layout = inflater.inflate(R.layout.fragment_weekview_list, container, false)
-        val listLayout = layout.timeRowsList
+        val listLayout = layout.rowsList
         eventsColumns = layout.events_columns
 
-        timeRows.forEach {
+        val numOfLessons = sharedPreferences.getInt(SharedPreferencesKeys.NUM_OF_LESSONS.toString(), 0)
+        val lessonsStartTime = sharedPreferences.getInt(SharedPreferencesKeys.LESSONS_START_TIME.toString(), 0)
+        val breakLength = sharedPreferences.getInt(SharedPreferencesKeys.LENGTH_OF_BREAK.toString(), 0)
+        val lessonLength = sharedPreferences.getInt(SharedPreferencesKeys.LENGTH_OF_LESSON.toString(), 0)
+
+        val rowTime = DateTime().withMillisOfDay(lessonsStartTime)
+
+        for(i in 0 until numOfLessons) {
             val rowView = getTimeRow(inflater)  // TODO: Create copies of this view
-            rowView.timeTextView.text = it
+            rowView.timeTextView.text = rowTime.plusMinutes(i*(lessonLength + breakLength)).toString("HH:mm")
 
             listLayout.addView(rowView)
         }
@@ -69,8 +80,10 @@ class WeekViewFragment : Fragment() {
     private fun getTimeRow(inflater: LayoutInflater): View {
         val rowView = inflater.inflate(R.layout.week_row, null, false)
 
-        rowView.layoutParams =
-            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        layoutParams.bottomMargin = 10f.toDp(context!!)
+        layoutParams.height = 100f.toDp(context!!)
+        rowView.layoutParams = layoutParams
 
         for (i in 1..MAX_COLUMN) {
             Log.i("MY_test", "$i")
@@ -194,7 +207,6 @@ class WeekViewFragment : Fragment() {
 
         // TODO: Customize parameter argument names
         const val ARG_COLUMN_COUNT = "column-count"
-        const val ARG_TIME_ROWS = "timeRows"
 
         const val MAX_COLUMN = 7
 
@@ -203,11 +215,10 @@ class WeekViewFragment : Fragment() {
          *
          */
         @JvmStatic
-        fun newInstance(columnCount: Int, timeRows: ArrayList<String>) =
+        fun newInstance(columnCount: Int) =
             WeekViewFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_COLUMN_COUNT, columnCount)
-                    putStringArrayList(ARG_TIME_ROWS, timeRows)
                 }
             }
     }
