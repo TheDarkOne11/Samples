@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.constraint.ConstraintSet
 import android.support.v4.app.Fragment
+import android.util.Half.toFloat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -347,7 +348,7 @@ class WeekViewFragment : Fragment() {
 
     private fun getEventsColumn(event: TimetableEvent): ConstraintLayout {
         val index = Days.daysBetween(firstDate, event.starts_at).days
-        return eventsColumns.elementAt(index + 1)
+        return eventsColumns.elementAt(index)
     }
 
     private fun getEventViewHeight(event: TimetableEvent): Int {
@@ -395,6 +396,6 @@ class WeekViewFragment : Fragment() {
                 }
             }
     }
-}
 
-data class IndexedTimetableEvent(var index: Int, val timetableEvent: TimetableEvent)
+    private data class IndexedTimetableEvent(var index: Int, val timetableEvent: TimetableEvent)
+}
