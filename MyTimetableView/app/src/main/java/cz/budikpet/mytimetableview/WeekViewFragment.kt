@@ -135,28 +135,6 @@ class WeekViewFragment : Fragment() {
 
     // MARK: Dynamically added events
 
-//    private fun createDummyEvents() {
-//        val column = eventsColumns.findViewById<ConstraintLayout>(R.id.eventColumn1)
-//
-//        val view0 = TextView(context!!)
-//        view0.text = "Lonely event, How are you doing?"
-//        view0.setBackgroundColor(Color.RED)
-//        view0.height = 100f.toDp(context!!)
-//
-//        val view = TextView(context!!)
-//        view.text = "Chain one, How are you doing?"
-//        view.setBackgroundColor(Color.LTGRAY)
-//        view.height = 150f.toDp(context!!)
-//
-//        val view2 = TextView(context!!)
-//        view2.text = "Chain two, This is second event?"
-//        view2.setBackgroundColor(Color.CYAN)
-//        view2.height = 200f.toDp(context!!)
-//
-//        addOverlappingEvents(column, arrayOf(view, view2), arrayOf(200f.toDp(context!!), 150f.toDp(context!!)))
-//        addEvent(column, view0, 30f.toDp(context!!))
-//    }
-
     private fun createDummyEvents() {
         val event1Start = firstDate.withTime(11, 0, 0, 0)
         val event1End = event1Start.plusMinutes(90)
@@ -292,13 +270,13 @@ class WeekViewFragment : Fragment() {
                     addEvent(currEvents.first())
                 } else {
                     // Add overlapping event
+                    addOverlappingEvents(currEvents)
                 }
             }
     }
 
     private fun addEvent(event: TimetableEvent) {
         // Create event view
-        val startsDp = getEventViewStart(event)
         val eventView = TextView(context!!)
         eventView.text = event.acronym
         eventView.setBackgroundColor(Color.RED)
@@ -315,7 +293,7 @@ class WeekViewFragment : Fragment() {
         val set = ConstraintSet()
         set.clone(column)
 
-        set.connect(eventView.id, ConstraintSet.TOP, column.id, ConstraintSet.TOP, startsDp)
+        set.connect(eventView.id, ConstraintSet.TOP, column.id, ConstraintSet.TOP, getEventViewStart(event))
         set.constrainWidth(eventView.id, 0f.toDp(context!!))
         set.connect(eventView.id, ConstraintSet.START, column.id, ConstraintSet.START, eventPadding)
         set.connect(eventView.id, ConstraintSet.END, column.id, ConstraintSet.END, eventPadding)
@@ -323,38 +301,47 @@ class WeekViewFragment : Fragment() {
         set.applyTo(column)
     }
 
-    private fun addOverlappingEvents(constLayout: ConstraintLayout, events: Array<View>, startsDp: Array<Int>) {
-        val set = ConstraintSet()
+    private fun addOverlappingEvents(events: List<TimetableEvent>) {
+        // Add event view into the correct column
+        val column = getEventsColumn(events.first())
 
         // Add events to the constLayout and get a list of ids in the process
         val eventIds = events
             .map {
-                if (it.id == -1) {
-                    it.id = View.generateViewId()
+                val eventView = TextView(context!!)
+                eventView.text = it.acronym
+                eventView.setBackgroundColor(Color.RED)
+                eventView.height = getEventViewHeight(it)
+
+                if (eventView.id == -1) {
+                    eventView.id = View.generateViewId()
                 }
 
-                constLayout.addView(it)
+                column.addView(eventView)
 
-                return@map it.id
+                return@map Pair(eventView.id, getEventViewStart(it))
             }
 
-        set.clone(constLayout)
+        val set = ConstraintSet()
+        set.clone(column)
 
         // Set constraints
-        eventIds.forEachIndexed { index, id ->
-            set.constrainWidth(id, 0f.toDp(context!!))
-            set.connect(id, ConstraintSet.TOP, constLayout.id, ConstraintSet.TOP, startsDp[index])
-            set.setMargin(id, ConstraintSet.START, eventPadding)
-            set.setMargin(id, ConstraintSet.END, eventPadding)
-        }
+        val idsArray = eventIds.map { pair ->
+            set.constrainWidth(pair.first, 0f.toDp(context!!))
+            set.connect(pair.first, ConstraintSet.TOP, column.id, ConstraintSet.TOP, pair.second)
+            set.setMargin(pair.first, ConstraintSet.START, eventPadding)
+            set.setMargin(pair.first, ConstraintSet.END, eventPadding)
+
+            return@map pair.first
+        }.toIntArray()
 
         // Create chain
         set.createHorizontalChain(
-            constLayout.id, ConstraintSet.LEFT, constLayout.id, ConstraintSet.RIGHT,
-            eventIds.toIntArray(), null, ConstraintSet.CHAIN_SPREAD
+            column.id, ConstraintSet.LEFT, column.id, ConstraintSet.RIGHT,
+            idsArray, null, ConstraintSet.CHAIN_SPREAD
         )
 
-        set.applyTo(constLayout)
+        set.applyTo(column)
 
     }
 
