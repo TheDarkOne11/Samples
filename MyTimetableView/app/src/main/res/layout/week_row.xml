@@ -17,25 +17,25 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:textSize="12sp" android:layout_weight="2" android:textAlignment="center"/>
 
-    <include android:layout_width="0dp" android:layout_height="wrap_content" layout="@layout/empty_space"
+    <include android:layout_width="0dp" android:layout_height="match_parent" layout="@layout/empty_space"
              android:layout_weight="2" android:id="@+id/space1"/>
 
-    <include android:layout_width="0dp" android:layout_height="wrap_content" layout="@layout/empty_space"
+    <include android:layout_width="0dp" android:layout_height="match_parent" layout="@layout/empty_space"
              android:layout_weight="2" android:id="@+id/space2"/>
 
-    <include android:layout_width="0dp" android:layout_height="wrap_content" layout="@layout/empty_space"
+    <include android:layout_width="0dp" android:layout_height="match_parent" layout="@layout/empty_space"
              android:layout_weight="2" android:id="@+id/space3"/>
 
-    <include android:layout_width="0dp" android:layout_height="wrap_content" layout="@layout/empty_space"
+    <include android:layout_width="0dp" android:layout_height="match_parent" layout="@layout/empty_space"
              android:layout_weight="2" android:id="@+id/space4"/>
 
-    <include android:layout_width="0dp" android:layout_height="wrap_content" layout="@layout/empty_space"
+    <include android:layout_width="0dp" android:layout_height="match_parent" layout="@layout/empty_space"
              android:layout_weight="2" android:id="@+id/space5"/>
 
-    <include android:layout_width="0dp" android:layout_height="wrap_content" layout="@layout/empty_space"
+    <include android:layout_width="0dp" android:layout_height="match_parent" layout="@layout/empty_space"
              android:layout_weight="2" android:id="@+id/space6"/>
 
-    <include android:layout_width="0dp" android:layout_height="wrap_content" layout="@layout/empty_space"
+    <include android:layout_width="0dp" android:layout_height="match_parent" layout="@layout/empty_space"
              android:layout_weight="2" android:id="@+id/space7"/>
 
 </LinearLayout>

@@ -7,8 +7,6 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.constraint.ConstraintSet
 import android.support.v4.app.Fragment
-import android.util.Half.toFloat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,13 +14,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import cz.budikpet.mytimetableview.data.EventType
 import cz.budikpet.mytimetableview.data.TimetableEvent
-
 import kotlinx.android.synthetic.main.fragment_weekview_list.view.*
 import kotlinx.android.synthetic.main.week_row.view.*
-import org.joda.time.DateTime
-import org.joda.time.Days
-import org.joda.time.LocalTime
-import org.joda.time.Minutes
+import org.joda.time.*
+
+// TODO: Check and make invisible unused columns
 
 /**
  * A fragment representing a list of Items.
@@ -30,9 +26,16 @@ import org.joda.time.Minutes
  * [WeekViewFragment.OnListFragmentInteractionListener] interface.
  */
 class WeekViewFragment : Fragment() {
+    private val events = mutableListOf<TimetableEvent>()
+
     private var listener: OnListFragmentInteractionListener? = null
     private lateinit var onEmptySpaceClickListener: View.OnClickListener
-    private val events = mutableListOf<TimetableEvent>()
+    private lateinit var onEventClickListener: View.OnClickListener
+
+    /**
+     * The only selected empty space is this one. Makes sure that at most one empty space add button is visible.
+     */
+    private var selectedEmptySpace: View? = null
 
     private var eventsColumnsCount = MAX_COLUMN
     private val eventPadding by lazy { 2f.toDp(context!!) }
@@ -60,8 +63,34 @@ class WeekViewFragment : Fragment() {
             firstDate = DateTime().withMillis(it.getLong(ARG_START_DATE))
         }
 
-        onEmptySpaceClickListener = View.OnClickListener {
-            listener?.onEmptySpaceClicked()
+        createListeners()
+    }
+
+    private fun createListeners() {
+        onEmptySpaceClickListener = View.OnClickListener { emptySpace ->
+            val selectedStartTime = emptySpace.tag as DateTime
+
+            if(selectedEmptySpace != null) {
+                if(selectedEmptySpace!!.tag != selectedStartTime || selectedEmptySpace!!.id != emptySpace.id) {
+                    // A different empty space was selected previously so it needs to be hidden
+                    selectedEmptySpace!!.alpha = 0f
+                }
+            }
+
+            selectedEmptySpace = emptySpace
+
+            if(emptySpace.alpha == 1f) {
+                emptySpace.alpha = 0f
+                listener?.onAddEventClicked(selectedStartTime, selectedStartTime.plusMinutes(lessonLength))
+            } else {
+                // Make the picture symbolizing event adding visible
+                emptySpace.alpha = 1f
+            }
+
+        }
+
+        onEventClickListener = View.OnClickListener { eventView ->
+            listener?.onEventClicked(eventView.tag as TimetableEvent)
         }
     }
 
@@ -79,10 +108,10 @@ class WeekViewFragment : Fragment() {
         )
 
         // Create rows
-        val currRowTime = DateTime().withTime(lessonsStartTime)
+        val currRowTime = DateTime().withDayOfWeek(DateTimeConstants.MONDAY).withTime(lessonsStartTime)
         for (i in 0 until numOfLessons) {
-            val rowView = getTimeRow(inflater)  // TODO: Create copies of this view?
-            rowView.timeTextView.text = currRowTime.plusMinutes(i * (lessonLength + breakLength)).toString("HH:mm")
+            val time = currRowTime.plusMinutes(i * (lessonLength + breakLength))
+            val rowView = getTimeRow(inflater, time)  // TODO: Create copies of this view?
 
             listLayout.addView(rowView)
         }
@@ -93,8 +122,9 @@ class WeekViewFragment : Fragment() {
         return layout
     }
 
-    private fun getTimeRow(inflater: LayoutInflater): View {
+    private fun getTimeRow(inflater: LayoutInflater, time: DateTime): View {
         val rowView = inflater.inflate(R.layout.week_row, null, false)
+        rowView.timeTextView.text = time.toString("HH:mm")
 
         val layoutParams =
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -103,16 +133,18 @@ class WeekViewFragment : Fragment() {
         rowView.layoutParams = layoutParams
 
         for (i in 1..MAX_COLUMN) {
-            Log.i("MY_test", "$i")
+//            Log.i("MY_test", "$i")
 
-            val spaceView = rowView
+            val emptySpace = rowView
                 .findViewById<View>(resources.getIdentifier("space$i", "id", context!!.packageName))
 
+            emptySpace.tag = time.plusDays(i - 1)
+
             if (i <= eventsColumnsCount) {
-                spaceView.setOnClickListener(onEmptySpaceClickListener)
-                spaceView.visibility = View.INVISIBLE
+                emptySpace.setOnClickListener(onEmptySpaceClickListener)
             } else {
-                spaceView.visibility = View.GONE
+                // This column is not displayed at all
+                emptySpace.visibility = View.GONE
             }
 
         }
@@ -167,8 +199,8 @@ class WeekViewFragment : Fragment() {
             occupied = 49
         )
 
-        val event3Start = firstDate.withTime(9, 15, 0, 0).plusDays(3)
-        val event3End = event3Start.plusMinutes(195)
+        val event3Start = firstDate.withTime(8, 15, 0, 0).plusDays(3)
+        val event3End = event3Start.withTime(10, 45, 0, 0)
 
         val event3 = TimetableEvent(
             room = "T9:153",
@@ -245,6 +277,7 @@ class WeekViewFragment : Fragment() {
         var currIndex = 0
         val preparedCollection = events.map { return@map IndexedTimetableEvent(-1, it) }
 
+        // Sets up indexes. Events with the same index are overlapping.
         preparedCollection.forEach { indexedTimetableEvent1: IndexedTimetableEvent ->
             if (indexedTimetableEvent1.index == -1) {
                 indexedTimetableEvent1.index = currIndex
@@ -265,12 +298,11 @@ class WeekViewFragment : Fragment() {
             .forEach { mapEntry ->
                 val currEvents = mapEntry.value.map { it.timetableEvent }
 
-                // TODO: Call methods
                 if (currEvents.size == 1) {
-                    // Add lone event
+                    // Add lone event to the view
                     addEvent(currEvents.first())
                 } else {
-                    // Add overlapping event
+                    // Add overlapping event to the view
                     addOverlappingEvents(currEvents)
                 }
             }
@@ -282,6 +314,8 @@ class WeekViewFragment : Fragment() {
         eventView.text = event.acronym
         eventView.setBackgroundColor(Color.RED)
         eventView.height = getEventViewHeight(event)
+        eventView.tag = event
+        eventView.setOnClickListener(onEventClickListener)
 
         if (eventView.id == -1) {
             eventView.id = View.generateViewId()
@@ -313,6 +347,8 @@ class WeekViewFragment : Fragment() {
                 eventView.text = it.acronym
                 eventView.setBackgroundColor(Color.RED)
                 eventView.height = getEventViewHeight(it)
+                eventView.tag = it
+                eventView.setOnClickListener(onEventClickListener)
 
                 if (eventView.id == -1) {
                     eventView.id = View.generateViewId()
@@ -370,9 +406,9 @@ class WeekViewFragment : Fragment() {
     interface OnListFragmentInteractionListener {
         fun onListFragmentInteraction()
 
-        fun onEmptySpaceClicked()
+        fun onAddEventClicked(startTime: DateTime, endTime: DateTime)
 
-        fun onEventClicked()
+        fun onEventClicked(event: TimetableEvent)
     }
 
     companion object {
@@ -397,5 +433,8 @@ class WeekViewFragment : Fragment() {
             }
     }
 
+    /**
+     * Helper data class used when grouping events by their overlap.
+     */
     private data class IndexedTimetableEvent(var index: Int, val timetableEvent: TimetableEvent)
 }

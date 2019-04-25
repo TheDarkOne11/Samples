@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import cz.budikpet.mytimetableview.data.TimetableEvent
 import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
 
@@ -55,11 +56,11 @@ class MainActivity : AppCompatActivity(), WeekViewFragment.OnListFragmentInterac
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onEmptySpaceClicked() {
-        Log.i("MY_", "Empty space clicked.")
+    override fun onAddEventClicked(startTime: DateTime, endTime: DateTime) {
+        Log.i("MY_", "Add event clicked: ${startTime.toString("dd.MM")}<${startTime.toString("HH:mm")} – ${endTime.toString("HH:mm")}>")
     }
 
-    override fun onEventClicked() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onEventClicked(event: TimetableEvent) {
+        Log.i("MY_", "Event clicked: $event")
     }
 }
