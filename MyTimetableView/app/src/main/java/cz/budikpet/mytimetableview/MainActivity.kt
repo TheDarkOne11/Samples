@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import cz.budikpet.mytimetableview.data.TimetableEvent
+import cz.budikpet.mytimetableview.util.SharedPreferencesKeys
+import cz.budikpet.mytimetableview.util.edit
 import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
 
@@ -23,7 +25,7 @@ class MainActivity : AppCompatActivity(), WeekViewFragment.OnListFragmentInterac
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        sharedPreferences =  getSharedPreferences("Pref", Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("Pref", Context.MODE_PRIVATE)
         setPreferences()
 
         if (savedInstanceState == null) {
@@ -52,12 +54,11 @@ class MainActivity : AppCompatActivity(), WeekViewFragment.OnListFragmentInterac
 
     }
 
-    override fun onListFragmentInteraction() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun onAddEventClicked(startTime: DateTime, endTime: DateTime) {
-        Log.i("MY_", "Add event clicked: ${startTime.toString("dd.MM")}<${startTime.toString("HH:mm")} – ${endTime.toString("HH:mm")}>")
+        Log.i(
+            "MY_",
+            "Add event clicked: ${startTime.toString("dd.MM")}<${startTime.toString("HH:mm")} – ${endTime.toString("HH:mm")}>"
+        )
     }
 
     override fun onEventClicked(event: TimetableEvent) {

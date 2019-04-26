@@ -15,11 +15,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import cz.budikpet.mytimetableview.data.EventType
 import cz.budikpet.mytimetableview.data.TimetableEvent
+import cz.budikpet.mytimetableview.util.SharedPreferencesKeys
+import cz.budikpet.mytimetableview.util.toDp
 import kotlinx.android.synthetic.main.fragment_weekview_list.view.*
 import org.joda.time.*
-
-// TODO: Check and make invisible unused columns
-// TODO: Make showed hours as standalone view
 
 /**
  * A fragment representing a list of Items.
@@ -71,8 +70,8 @@ class WeekViewFragment : Fragment() {
         onEmptySpaceClickListener = View.OnClickListener { emptySpace ->
             val selectedStartTime = emptySpace.tag as DateTime
 
-            if(selectedEmptySpace != null) {
-                if(selectedEmptySpace!!.tag != selectedStartTime || selectedEmptySpace!!.id != emptySpace.id) {
+            if (selectedEmptySpace != null) {
+                if (selectedEmptySpace!!.tag != selectedStartTime || selectedEmptySpace!!.id != emptySpace.id) {
                     // A different empty space was selected previously so it needs to be hidden
                     selectedEmptySpace!!.alpha = 0f
                 }
@@ -80,7 +79,7 @@ class WeekViewFragment : Fragment() {
 
             selectedEmptySpace = emptySpace
 
-            if(emptySpace.alpha == 1f) {
+            if (emptySpace.alpha == 1f) {
                 emptySpace.alpha = 0f
                 listener?.onAddEventClicked(selectedStartTime, selectedStartTime.plusMinutes(lessonLength))
             } else {
@@ -113,13 +112,19 @@ class WeekViewFragment : Fragment() {
         val currRowTime = DateTime().withDayOfWeek(DateTimeConstants.MONDAY).withTime(lessonsStartTime)
         for (i in 0 until numOfLessons) {
             val time = currRowTime.plusMinutes(i * (lessonLength + breakLength))
-            createNewRow(inflater, rowsList, timesList,  time)
+            createNewRow(inflater, rowsList, timesList, time)
         }
 
         // Hide views according to the number of columns
         val dayDisplayLayout = layout.dayDisplay
-        for(i in eventsColumnsCount until MAX_COLUMN) {
-            dayDisplayLayout.findViewById<TextView>(resources.getIdentifier("dayTextView$i", "id", context!!.packageName))
+        for (i in eventsColumnsCount until MAX_COLUMN) {
+            dayDisplayLayout.findViewById<TextView>(
+                resources.getIdentifier(
+                    "dayTextView$i",
+                    "id",
+                    context!!.packageName
+                )
+            )
                 .visibility = View.GONE
 
             eventsColumns.elementAt(i).visibility = View.GONE
@@ -131,7 +136,12 @@ class WeekViewFragment : Fragment() {
         return layout
     }
 
-    private fun createNewRow(inflater: LayoutInflater, rowsList: LinearLayout, timesList: LinearLayout, time: DateTime) {
+    private fun createNewRow(
+        inflater: LayoutInflater,
+        rowsList: LinearLayout,
+        timesList: LinearLayout,
+        time: DateTime
+    ) {
         val rowView = inflater.inflate(R.layout.week_row, null, false)
         val timeTextView = inflater.inflate(R.layout.time_text_view, null, false) as TextView
         timeTextView.text = time.toString("HH:mm")
@@ -416,8 +426,6 @@ class WeekViewFragment : Fragment() {
     // MARK: Initializers
 
     interface OnListFragmentInteractionListener {
-        fun onListFragmentInteraction()
-
         fun onAddEventClicked(startTime: DateTime, endTime: DateTime)
 
         fun onEventClicked(event: TimetableEvent)

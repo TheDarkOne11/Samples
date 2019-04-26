@@ -1,4 +1,4 @@
-package cz.budikpet.mytimetableview
+package cz.budikpet.mytimetableview.util
 
 enum class SharedPreferencesKeys {
     GOOGLE_ACCOUNT_NAME,

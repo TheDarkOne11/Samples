@@ -1,4 +1,4 @@
-package cz.budikpet.mytimetableview
+package cz.budikpet.mytimetableview.util
 
 import android.content.Context
 import android.content.SharedPreferences
