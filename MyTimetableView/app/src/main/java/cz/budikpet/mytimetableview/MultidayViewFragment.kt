@@ -17,15 +17,13 @@ import cz.budikpet.mytimetableview.data.EventType
 import cz.budikpet.mytimetableview.data.TimetableEvent
 import cz.budikpet.mytimetableview.util.SharedPreferencesKeys
 import cz.budikpet.mytimetableview.util.toDp
-import kotlinx.android.synthetic.main.fragment_weekview_list.view.*
+import kotlinx.android.synthetic.main.fragment_multidayview_list.view.*
 import org.joda.time.*
 
 /**
- * A fragment representing a list of Items.
- * Activities containing this fragment MUST implement the
- * [WeekViewFragment.OnListFragmentInteractionListener] interface.
+ * Fragment used to show multiple days like Google Calendar Week View.
  */
-class WeekViewFragment : Fragment() {
+class MultidayViewFragment : Fragment() {
     private val events = mutableListOf<TimetableEvent>()
 
     private var listener: OnListFragmentInteractionListener? = null
@@ -98,7 +96,7 @@ class WeekViewFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val layout = inflater.inflate(R.layout.fragment_weekview_list, container, false)
+        val layout = inflater.inflate(R.layout.fragment_multidayview_list, container, false)
         val rowsList = layout.rowsList
         val timesList = layout.timesList
 
@@ -136,13 +134,16 @@ class WeekViewFragment : Fragment() {
         return layout
     }
 
+    /**
+     * Adds new time row into the View.
+     */
     private fun createNewRow(
         inflater: LayoutInflater,
         rowsList: LinearLayout,
         timesList: LinearLayout,
         time: DateTime
     ) {
-        val rowView = inflater.inflate(R.layout.week_row, null, false)
+        val rowView = inflater.inflate(R.layout.time_row, null, false)
         val timeTextView = inflater.inflate(R.layout.time_text_view, null, false) as TextView
         timeTextView.text = time.toString("HH:mm")
 
@@ -281,6 +282,21 @@ class WeekViewFragment : Fragment() {
             occupied = 49
         )
 
+        val event7Start = firstDate.withTime(19, 15, 0, 0).plusDays(2)
+        val event7End = event7Start.plusMinutes(200)
+
+        val event7 = TimetableEvent(
+            room = "T9:153",
+            fullName = "BI-LATE",
+            acronym = "BI-LATE_7",
+            capacity = 90,
+            starts_at = event7Start,
+            ends_at = event7End,
+            event_type = EventType.COURSE_EVENT,
+            teachers = arrayListOf("bulim"),
+            occupied = 49
+        )
+
 
         events.add(event1)
         events.add(event2)
@@ -290,6 +306,8 @@ class WeekViewFragment : Fragment() {
 
         events.add(event4)
         events.add(event5)
+
+        events.add(event7)
     }
 
     /**
@@ -330,18 +348,12 @@ class WeekViewFragment : Fragment() {
             }
     }
 
+    /**
+     * Adds new non overlapping event into the view.
+     */
     private fun addEvent(event: TimetableEvent) {
         // Create event view
-        val eventView = TextView(context!!)
-        eventView.text = event.acronym
-        eventView.setBackgroundColor(Color.RED)
-        eventView.height = getEventViewHeight(event)
-        eventView.tag = event
-        eventView.setOnClickListener(onEventClickListener)
-
-        if (eventView.id == -1) {
-            eventView.id = View.generateViewId()
-        }
+        val eventView = createEventView(event)
 
         // Add event view into the correct column
         val column = getEventsColumn(event)
@@ -358,6 +370,9 @@ class WeekViewFragment : Fragment() {
         set.applyTo(column)
     }
 
+    /**
+     * Adds new overlapping events into the view.
+     */
     private fun addOverlappingEvents(events: List<TimetableEvent>) {
         // Add event view into the correct column
         val column = getEventsColumn(events.first())
@@ -365,17 +380,7 @@ class WeekViewFragment : Fragment() {
         // Add events to the constLayout and get a list of ids in the process
         val eventIds = events
             .map {
-                val eventView = TextView(context!!)
-                eventView.text = it.acronym
-                eventView.setBackgroundColor(Color.RED)
-                eventView.height = getEventViewHeight(it)
-                eventView.tag = it
-                eventView.setOnClickListener(onEventClickListener)
-
-                if (eventView.id == -1) {
-                    eventView.id = View.generateViewId()
-                }
-
+                val eventView = createEventView(it)
                 column.addView(eventView)
 
                 return@map Pair(eventView.id, getEventViewStart(it))
@@ -404,11 +409,36 @@ class WeekViewFragment : Fragment() {
 
     }
 
+    /**
+     * @return An EventView to be displayed in the view.
+     */
+    private fun createEventView(event: TimetableEvent): TextView {
+        val eventView = TextView(context!!)
+        eventView.text = event.acronym
+        eventView.setBackgroundColor(Color.RED)
+        eventView.height = getEventViewHeight(event)
+        eventView.tag = event
+        eventView.setOnClickListener(onEventClickListener)
+
+        if (eventView.id == -1) {
+            eventView.id = View.generateViewId()
+        }
+
+        return eventView
+    }
+
+    /**
+     * @return The column where the event is to be placed.
+     */
     private fun getEventsColumn(event: TimetableEvent): ConstraintLayout {
         val index = Days.daysBetween(firstDate, event.starts_at).days
         return eventsColumns.elementAt(index)
     }
 
+    /**
+     * Calculates height of the EventView according to how much time the event takes.
+     * @return Height of the EventView in dps.
+     */
     private fun getEventViewHeight(event: TimetableEvent): Int {
         return Minutes.minutesBetween(event.starts_at, event.ends_at)
             .minutes
@@ -416,6 +446,10 @@ class WeekViewFragment : Fragment() {
             .toDp(context!!)
     }
 
+    /**
+     * Calculates starting y point of the EventView according to its start time.
+     * @return A starting y point of the EventView in dps.
+     */
     private fun getEventViewStart(event: TimetableEvent): Int {
         return Minutes.minutesBetween(event.starts_at.withTime(lessonsStartTime), event.starts_at)
             .minutes
@@ -433,19 +467,14 @@ class WeekViewFragment : Fragment() {
 
     companion object {
 
-        // TODO: Customize parameter argument names
         const val ARG_COLUMN_COUNT = "column-count"
         const val ARG_START_DATE = "start-date"
 
         const val MAX_COLUMN = 7
 
-        // TODO: Customize parameter initialization
-        /**
-         *
-         */
         @JvmStatic
         fun newInstance(columnCount: Int, startDate: DateTime) =
-            WeekViewFragment().apply {
+            MultidayViewFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_COLUMN_COUNT, columnCount)
                     putLong(ARG_START_DATE, startDate.millis)
@@ -454,7 +483,7 @@ class WeekViewFragment : Fragment() {
     }
 
     /**
-     * Helper data class used when grouping events by their overlap.
+     * Helper data class used when grouping events by the way they overlap.
      */
     private data class IndexedTimetableEvent(var index: Int, val timetableEvent: TimetableEvent)
 }

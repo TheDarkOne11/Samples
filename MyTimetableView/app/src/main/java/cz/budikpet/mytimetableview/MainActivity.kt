@@ -12,9 +12,9 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
 
 
-class MainActivity : AppCompatActivity(), WeekViewFragment.OnListFragmentInteractionListener {
+class MainActivity : AppCompatActivity(), MultidayViewFragment.OnListFragmentInteractionListener {
 
-    private lateinit var weekViewFragment: WeekViewFragment
+    private lateinit var multidayViewFragment: MultidayViewFragment
 
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -29,19 +29,18 @@ class MainActivity : AppCompatActivity(), WeekViewFragment.OnListFragmentInterac
         setPreferences()
 
         if (savedInstanceState == null) {
-            //        "${item.hourOfDay()}:${item.minuteOfHour()}"
-            weekViewFragment = WeekViewFragment.newInstance(7, mondayDate)
+            multidayViewFragment = MultidayViewFragment.newInstance(7, mondayDate)
 
             supportFragmentManager.beginTransaction()
-                .add(R.id.weekViewFragment, weekViewFragment)
+                .add(R.id.multidayViewFragment, multidayViewFragment)
                 .commitNow()
         } else {
-            weekViewFragment = supportFragmentManager.findFragmentById(R.id.weekViewFragment) as WeekViewFragment
+            multidayViewFragment = supportFragmentManager.findFragmentById(R.id.multidayViewFragment) as MultidayViewFragment
         }
     }
 
     private fun setPreferences() {
-        // Prepare needed preferences for the WeekViewFragment
+        // Prepare needed preferences for the MultidayViewFragment
 
         val lessonsStartTime = DateTime().withTime(7, 30, 0, 0).millisOfDay
 
