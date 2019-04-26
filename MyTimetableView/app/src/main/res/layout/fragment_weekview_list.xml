@@ -11,10 +11,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" android:id="@+id/timetableHolder">
 
-        <TextView
-                android:text="TextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/textView2"
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                tools:context=".WeekViewFragment"
+                android:orientation="vertical"
+                android:id="@+id/timesList"
+                android:showDividers="middle|beginning|end"
+                android:divider="@drawable/row_item_divider"
                 app:layout_constraintTop_toBottomOf="@id/dayDisplay" app:layout_constraintStart_toStartOf="parent"/>
         <LinearLayout
                 android:layout_height="wrap_content"
@@ -25,7 +29,7 @@
                 android:id="@+id/dayDisplay" android:layout_width="0dp" android:layout_weight="2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView2">
+                app:layout_constraintStart_toEndOf="@+id/timesList" android:layout_marginStart="8dp">
 
             <TextView
                     android:text="@string/mon"
@@ -72,9 +76,9 @@
                 tools:context=".WeekViewFragment"
                 android:orientation="vertical"
                 app:layout_constraintTop_toBottomOf="@id/dayDisplay"
-                app:layout_constraintStart_toEndOf="@+id/textView2"
+                app:layout_constraintStart_toEndOf="@+id/timesList"
                 app:layout_constraintEnd_toEndOf="parent"
-        >
+                android:layout_marginStart="8dp">
         </LinearLayout>
         <LinearLayout
                 android:orientation="horizontal"
@@ -83,9 +87,9 @@
                 android:showDividers="middle"
                 android:divider="@drawable/row_item_divider"
                 app:layout_constraintTop_toBottomOf="@id/dayDisplay"
-                app:layout_constraintStart_toEndOf="@+id/textView2"
+                app:layout_constraintStart_toEndOf="@+id/timesList"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="@id/rowsList">
+                app:layout_constraintBottom_toBottomOf="@id/rowsList" android:layout_marginStart="8dp">
 
             <android.support.constraint.ConstraintLayout
                     android:layout_width="0dp"

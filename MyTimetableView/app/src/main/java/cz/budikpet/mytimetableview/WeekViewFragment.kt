@@ -16,7 +16,6 @@ import android.widget.TextView
 import cz.budikpet.mytimetableview.data.EventType
 import cz.budikpet.mytimetableview.data.TimetableEvent
 import kotlinx.android.synthetic.main.fragment_weekview_list.view.*
-import kotlinx.android.synthetic.main.week_row.view.*
 import org.joda.time.*
 
 // TODO: Check and make invisible unused columns
@@ -101,7 +100,8 @@ class WeekViewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val layout = inflater.inflate(R.layout.fragment_weekview_list, container, false)
-        val listLayout = layout.rowsList
+        val rowsList = layout.rowsList
+        val timesList = layout.timesList
 
         // Store references to dynamic event columns
         eventsColumns = listOf(
@@ -113,9 +113,7 @@ class WeekViewFragment : Fragment() {
         val currRowTime = DateTime().withDayOfWeek(DateTimeConstants.MONDAY).withTime(lessonsStartTime)
         for (i in 0 until numOfLessons) {
             val time = currRowTime.plusMinutes(i * (lessonLength + breakLength))
-            val rowView = getTimeRow(inflater, time)  // TODO: Create copies of this view?
-
-            listLayout.addView(rowView)
+            createNewRow(inflater, rowsList, timesList,  time)
         }
 
         // Hide views according to the number of columns
@@ -133,15 +131,17 @@ class WeekViewFragment : Fragment() {
         return layout
     }
 
-    private fun getTimeRow(inflater: LayoutInflater, time: DateTime): View {
+    private fun createNewRow(inflater: LayoutInflater, rowsList: LinearLayout, timesList: LinearLayout, time: DateTime) {
         val rowView = inflater.inflate(R.layout.week_row, null, false)
-//        rowView.timeTextView.text = time.toString("HH:mm")    // TODO: Enable
+        val timeTextView = TextView(context!!)
+        timeTextView.text = time.toString("HH:mm")
 
         val layoutParams =
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         layoutParams.bottomMargin = (breakLength * dpPerMinRatio).toFloat().toDp(context!!)
         layoutParams.height = (lessonLength * dpPerMinRatio).toFloat().toDp(context!!)
         rowView.layoutParams = layoutParams
+        timeTextView.layoutParams = layoutParams
 
         for (i in 0 until MAX_COLUMN) {
             Log.i("MY_test", "$i")
@@ -160,7 +160,8 @@ class WeekViewFragment : Fragment() {
 
         }
 
-        return rowView
+        rowsList.addView(rowView)
+        timesList.addView(timeTextView)
     }
 
     override fun onAttach(context: Context) {
