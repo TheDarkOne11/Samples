@@ -12,84 +12,78 @@
             android:layout_height="match_parent" android:id="@+id/timetableHolder">
 
         <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                tools:context=".WeekViewFragment"
-                android:orientation="vertical"
-                android:id="@+id/timesList"
-                android:showDividers="middle|beginning|end"
-                android:divider="@drawable/row_item_divider"
-                app:layout_constraintTop_toBottomOf="@id/dayDisplay" app:layout_constraintStart_toStartOf="parent"/>
-        <LinearLayout
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:showDividers="middle"
+                android:showDividers="middle|beginning|end"
                 android:divider="@drawable/row_item_divider"
-                android:background="@drawable/top_bottom_divider"
                 android:id="@+id/dayDisplay" android:layout_width="0dp" android:layout_weight="2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/timesList" android:layout_marginStart="8dp">
+                app:layout_constraintStart_toEndOf="@+id/timesList" android:background="@color/itemWhite">
 
             <TextView
                     android:text="@string/mon"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content" android:layout_weight="2" android:id="@+id/dayTextView0"
+                    android:layout_height="match_parent" android:layout_weight="2" android:id="@+id/dayTextView0"
                     android:textAlignment="center"/>
 
             <TextView
                     android:text="@string/tue"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content" android:layout_weight="2" android:id="@+id/dayTextView1"
+                    android:layout_height="match_parent" android:layout_weight="2" android:id="@+id/dayTextView1"
                     android:textAlignment="center"/>
             <TextView
                     android:text="@string/wed"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content" android:layout_weight="2" android:id="@+id/dayTextView2"
+                    android:layout_height="match_parent" android:layout_weight="2" android:id="@+id/dayTextView2"
                     android:textAlignment="center"/>
             <TextView
                     android:text="@string/thu"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content" android:layout_weight="2" android:id="@+id/dayTextView3"
+                    android:layout_height="match_parent" android:layout_weight="2" android:id="@+id/dayTextView3"
                     android:textAlignment="center"/>
             <TextView
                     android:text="@string/fri"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content" android:layout_weight="2" android:id="@+id/dayTextView4"
+                    android:layout_height="match_parent" android:layout_weight="2" android:id="@+id/dayTextView4"
                     android:textAlignment="center"/>
             <TextView
                     android:text="@string/sat"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content" android:layout_weight="2" android:id="@+id/dayTextView5"
+                    android:layout_height="match_parent" android:layout_weight="2" android:id="@+id/dayTextView5"
                     android:textAlignment="center"/>
             <TextView
                     android:text="@string/sun"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content" android:layout_weight="2" android:id="@+id/dayTextView6"
+                    android:layout_height="match_parent" android:layout_weight="2" android:id="@+id/dayTextView6"
                     android:textAlignment="center"/>
 
         </LinearLayout>
         <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/timesList"
+                app:layout_constraintTop_toBottomOf="@id/dayDisplay" app:layout_constraintStart_toStartOf="parent"/>
+        <LinearLayout
                 android:id="@+id/rowsList"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                tools:context=".WeekViewFragment"
                 android:orientation="vertical"
                 app:layout_constraintTop_toBottomOf="@id/dayDisplay"
                 app:layout_constraintStart_toEndOf="@+id/timesList"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginStart="8dp">
+        >
         </LinearLayout>
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="0dp"
                 android:layout_height="0dp" android:id="@+id/events_columns"
-                android:showDividers="middle"
                 android:divider="@drawable/row_item_divider"
                 app:layout_constraintTop_toBottomOf="@id/dayDisplay"
                 app:layout_constraintStart_toEndOf="@+id/timesList"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="@id/rowsList" android:layout_marginStart="8dp">
+                app:layout_constraintBottom_toBottomOf="@id/rowsList" android:baselineAligned="false">
 
             <android.support.constraint.ConstraintLayout
                     android:layout_width="0dp"

@@ -133,7 +133,7 @@ class WeekViewFragment : Fragment() {
 
     private fun createNewRow(inflater: LayoutInflater, rowsList: LinearLayout, timesList: LinearLayout, time: DateTime) {
         val rowView = inflater.inflate(R.layout.week_row, null, false)
-        val timeTextView = TextView(context!!)
+        val timeTextView = inflater.inflate(R.layout.time_text_view, null, false) as TextView
         timeTextView.text = time.toString("HH:mm")
 
         val layoutParams =

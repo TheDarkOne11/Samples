@@ -6,7 +6,7 @@
         android:orientation="horizontal"
         android:showDividers="middle"
         android:divider="@drawable/row_item_divider"
-        android:background="@drawable/top_bottom_divider"
+        android:background="@drawable/rectangle_divider"
         android:id="@+id/row" android:layout_width="match_parent">
 
     <include android:layout_width="0dp" android:layout_height="match_parent" layout="@layout/empty_space"
