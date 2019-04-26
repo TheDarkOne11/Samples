@@ -22,38 +22,38 @@
                 app:layout_constraintStart_toEndOf="@+id/timesList" android:background="@color/itemWhite">
 
             <TextView
-                    android:text="@string/mon"
+                    tools:text="mon"
                     android:layout_width="0dp"
                     android:layout_height="match_parent" android:layout_weight="2" android:id="@+id/dayTextView0"
                     android:textAlignment="center"/>
 
             <TextView
-                    android:text="@string/tue"
+                    tools:text="tue"
                     android:layout_width="0dp"
                     android:layout_height="match_parent" android:layout_weight="2" android:id="@+id/dayTextView1"
                     android:textAlignment="center"/>
             <TextView
-                    android:text="@string/wed"
+                    tools:text="wed"
                     android:layout_width="0dp"
                     android:layout_height="match_parent" android:layout_weight="2" android:id="@+id/dayTextView2"
                     android:textAlignment="center"/>
             <TextView
-                    android:text="@string/thu"
+                    tools:text="thu"
                     android:layout_width="0dp"
                     android:layout_height="match_parent" android:layout_weight="2" android:id="@+id/dayTextView3"
                     android:textAlignment="center"/>
             <TextView
-                    android:text="@string/fri"
+                    tools:text="fri"
                     android:layout_width="0dp"
                     android:layout_height="match_parent" android:layout_weight="2" android:id="@+id/dayTextView4"
                     android:textAlignment="center"/>
             <TextView
-                    android:text="@string/sat"
+                    tools:text="sat"
                     android:layout_width="0dp"
                     android:layout_height="match_parent" android:layout_weight="2" android:id="@+id/dayTextView5"
                     android:textAlignment="center"/>
             <TextView
-                    android:text="@string/sun"
+                    tools:text="sun"
                     android:layout_width="0dp"
                     android:layout_height="match_parent" android:layout_weight="2" android:id="@+id/dayTextView6"
                     android:textAlignment="center"/>

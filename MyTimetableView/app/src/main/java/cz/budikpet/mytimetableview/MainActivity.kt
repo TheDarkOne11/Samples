@@ -18,9 +18,6 @@ class MainActivity : AppCompatActivity(), MultidayViewFragment.OnListFragmentInt
 
     private lateinit var sharedPreferences: SharedPreferences
 
-    private val mondayDate = DateTime().withDayOfWeek(DateTimeConstants.MONDAY)
-        .withTime(0, 0, 0, 0)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -29,7 +26,7 @@ class MainActivity : AppCompatActivity(), MultidayViewFragment.OnListFragmentInt
         setPreferences()
 
         if (savedInstanceState == null) {
-            multidayViewFragment = MultidayViewFragment.newInstance(7, mondayDate)
+            multidayViewFragment = MultidayViewFragment.newInstance(7, DateTime())
 
             supportFragmentManager.beginTransaction()
                 .add(R.id.multidayViewFragment, multidayViewFragment)

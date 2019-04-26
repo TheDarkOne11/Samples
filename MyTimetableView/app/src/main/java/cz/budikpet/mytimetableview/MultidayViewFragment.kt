@@ -35,9 +35,9 @@ class MultidayViewFragment : Fragment() {
      */
     private var selectedEmptySpace: View? = null
 
-    private var eventsColumnsCount = MAX_COLUMN
+    private var eventsColumnsCount = MAX_COLUMNS
     private val eventPadding by lazy { 2f.toDp(context!!) }
-    private var firstDate = DateTime()
+    private lateinit var firstDate: DateTime
     private val dpPerMinRatio = 1
     private val numOfLessons by lazy { sharedPreferences.getInt(SharedPreferencesKeys.NUM_OF_LESSONS.toString(), 0) }
     private val breakLength by lazy { sharedPreferences.getInt(SharedPreferencesKeys.LENGTH_OF_BREAK.toString(), 0) }
@@ -58,7 +58,11 @@ class MultidayViewFragment : Fragment() {
 
         arguments?.let {
             eventsColumnsCount = it.getInt(ARG_COLUMN_COUNT)
-            firstDate = DateTime().withMillis(it.getLong(ARG_START_DATE))
+            firstDate = DateTime().withMillis(it.getLong(ARG_START_DATE)).withTimeAtStartOfDay()
+
+            if(eventsColumnsCount == MAX_COLUMNS) {
+                firstDate = firstDate.withDayOfWeek(DateTimeConstants.MONDAY)
+            }
         }
 
         createListeners()
@@ -115,23 +119,26 @@ class MultidayViewFragment : Fragment() {
 
         // Hide views according to the number of columns
         val dayDisplayLayout = layout.dayDisplay
-        for (i in eventsColumnsCount until MAX_COLUMN) {
-            dayDisplayLayout.findViewById<TextView>(
-                resources.getIdentifier(
-                    "dayTextView$i",
-                    "id",
-                    context!!.packageName
-                )
-            )
-                .visibility = View.GONE
+        for (i in 0 until MAX_COLUMNS) {
+            val dayTextView = getDayTextView(i, dayDisplayLayout)
 
-            eventsColumns.elementAt(i).visibility = View.GONE
+            if(i >= eventsColumnsCount) {
+                dayTextView.visibility = View.GONE
+                eventsColumns.elementAt(i).visibility = View.GONE
+            } else {
+                dayTextView.text = firstDate.plusDays(i).dayOfWeek().getAsShortText(null).capitalize()
+            }
         }
 
         createDummyEvents()
         updateEventsView()
 
         return layout
+    }
+
+    private fun getDayTextView(num: Int, dayDisplayLayout: LinearLayout): TextView {
+        return dayDisplayLayout.findViewById<TextView>(
+            resources.getIdentifier("dayTextView$num", "id", context!!.packageName))
     }
 
     /**
@@ -154,7 +161,7 @@ class MultidayViewFragment : Fragment() {
         rowView.layoutParams = layoutParams
         timeTextView.layoutParams = layoutParams
 
-        for (i in 0 until MAX_COLUMN) {
+        for (i in 0 until MAX_COLUMNS) {
             Log.i("MY_test", "$i")
 
             val emptySpace = rowView
@@ -192,7 +199,9 @@ class MultidayViewFragment : Fragment() {
     // MARK: Dynamically added events
 
     private fun createDummyEvents() {
-        val event1Start = firstDate.withTime(11, 0, 0, 0)
+        val mondayDate = firstDate.withDayOfWeek(DateTimeConstants.MONDAY).withTimeAtStartOfDay()
+
+        val event1Start = mondayDate.withTime(11, 0, 0, 0)
         val event1End = event1Start.plusMinutes(90)
 
         val event1 = TimetableEvent(
@@ -222,7 +231,7 @@ class MultidayViewFragment : Fragment() {
             occupied = 49
         )
 
-        val event3Start = firstDate.withTime(8, 15, 0, 0).plusDays(3)
+        val event3Start = mondayDate.withTime(8, 15, 0, 0).plusDays(4)
         val event3End = event3Start.withTime(10, 45, 0, 0)
 
         val event3 = TimetableEvent(
@@ -237,7 +246,7 @@ class MultidayViewFragment : Fragment() {
             occupied = 49
         )
 
-        val event4Start = firstDate.withTime(11, 0, 0, 0).plusDays(5)
+        val event4Start = mondayDate.withTime(11, 0, 0, 0).plusDays(5)
         val event4End = event4Start.plusMinutes(90)
 
         val event4 = TimetableEvent(
@@ -282,7 +291,7 @@ class MultidayViewFragment : Fragment() {
             occupied = 49
         )
 
-        val event7Start = firstDate.withTime(19, 15, 0, 0).plusDays(2)
+        val event7Start = mondayDate.withTime(19, 15, 0, 0).plusDays(2)
         val event7End = event7Start.plusMinutes(200)
 
         val event7 = TimetableEvent(
@@ -315,7 +324,10 @@ class MultidayViewFragment : Fragment() {
      */
     private fun updateEventsView() {
         var currIndex = 0
-        val preparedCollection = events.map { return@map IndexedTimetableEvent(-1, it) }
+        val lastDate = firstDate.plusDays(eventsColumnsCount)
+        val preparedCollection = events
+            .filter { firstDate.isBefore(it.starts_at.millis) && lastDate.isAfter(it.starts_at.millis) }
+            .map { return@map IndexedTimetableEvent(-1, it) }
 
         // Sets up indexes. Events with the same index are overlapping.
         preparedCollection.forEach { indexedTimetableEvent1: IndexedTimetableEvent ->
@@ -470,16 +482,24 @@ class MultidayViewFragment : Fragment() {
         const val ARG_COLUMN_COUNT = "column-count"
         const val ARG_START_DATE = "start-date"
 
-        const val MAX_COLUMN = 7
+        const val MAX_COLUMNS = 7
 
         @JvmStatic
-        fun newInstance(columnCount: Int, startDate: DateTime) =
-            MultidayViewFragment().apply {
+        fun newInstance(columnCount: Int, startDate: DateTime): MultidayViewFragment {
+            var columnCount = columnCount
+
+            when {
+                columnCount < 1 -> columnCount = 1
+                columnCount > 7 -> columnCount = 7
+            }
+
+            return MultidayViewFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_COLUMN_COUNT, columnCount)
                     putLong(ARG_START_DATE, startDate.millis)
                 }
             }
+        }
     }
 
     /**

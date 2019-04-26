@@ -7,5 +7,6 @@ enum class SharedPreferencesKeys {
     NUM_OF_LESSONS,
     LENGTH_OF_BREAK,
     LENGTH_OF_LESSON,
-    LESSONS_START_TIME
+    LESSONS_START_TIME,
+    FIRST_DAY_OF_THE_WEEK
 }
