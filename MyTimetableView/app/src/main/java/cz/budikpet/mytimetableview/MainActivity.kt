@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(), WeekViewFragment.OnListFragmentInterac
 
         if (savedInstanceState == null) {
             //        "${item.hourOfDay()}:${item.minuteOfHour()}"
-            weekViewFragment = WeekViewFragment.newInstance(7, mondayDate)
+            weekViewFragment = WeekViewFragment.newInstance(3, mondayDate)
 
             supportFragmentManager.beginTransaction()
                 .add(R.id.weekViewFragment, weekViewFragment)

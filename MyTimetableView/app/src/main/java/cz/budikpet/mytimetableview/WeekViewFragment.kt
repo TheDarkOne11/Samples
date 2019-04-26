@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.week_row.view.*
 import org.joda.time.*
 
 // TODO: Check and make invisible unused columns
+// TODO: Make showed hours as standalone view
 
 /**
  * A fragment representing a list of Items.
@@ -114,6 +115,15 @@ class WeekViewFragment : Fragment() {
             val rowView = getTimeRow(inflater, time)  // TODO: Create copies of this view?
 
             listLayout.addView(rowView)
+        }
+
+        // Hide views according to the number of columns
+        val dayDisplayLayout = layout.dayDisplay
+        for(i in (eventsColumnsCount + 1)..MAX_COLUMN) {
+            dayDisplayLayout.findViewById<TextView>(resources.getIdentifier("dayTextView$i", "id", context!!.packageName))
+                .visibility = View.GONE
+
+            eventsColumns.elementAt(i - 1).visibility = View.GONE
         }
 
         createDummyEvents()
