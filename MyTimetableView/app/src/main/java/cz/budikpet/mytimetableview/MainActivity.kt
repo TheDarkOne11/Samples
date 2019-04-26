@@ -9,7 +9,6 @@ import cz.budikpet.mytimetableview.data.TimetableEvent
 import cz.budikpet.mytimetableview.util.SharedPreferencesKeys
 import cz.budikpet.mytimetableview.util.edit
 import org.joda.time.DateTime
-import org.joda.time.DateTimeConstants
 
 
 class MainActivity : AppCompatActivity(), MultidayViewFragment.OnListFragmentInteractionListener {
@@ -32,7 +31,8 @@ class MainActivity : AppCompatActivity(), MultidayViewFragment.OnListFragmentInt
                 .add(R.id.multidayViewFragment, multidayViewFragment)
                 .commitNow()
         } else {
-            multidayViewFragment = supportFragmentManager.findFragmentById(R.id.multidayViewFragment) as MultidayViewFragment
+            multidayViewFragment =
+                supportFragmentManager.findFragmentById(R.id.multidayViewFragment) as MultidayViewFragment
         }
     }
 

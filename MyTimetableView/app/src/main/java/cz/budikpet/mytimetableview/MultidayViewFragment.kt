@@ -60,7 +60,7 @@ class MultidayViewFragment : Fragment() {
             eventsColumnsCount = it.getInt(ARG_COLUMN_COUNT)
             firstDate = DateTime().withMillis(it.getLong(ARG_START_DATE)).withTimeAtStartOfDay()
 
-            if(eventsColumnsCount == MAX_COLUMNS) {
+            if (eventsColumnsCount == MAX_COLUMNS) {
                 firstDate = firstDate.withDayOfWeek(DateTimeConstants.MONDAY)
             }
         }
@@ -122,7 +122,7 @@ class MultidayViewFragment : Fragment() {
         for (i in 0 until MAX_COLUMNS) {
             val dayTextView = getDayTextView(i, dayDisplayLayout)
 
-            if(i >= eventsColumnsCount) {
+            if (i >= eventsColumnsCount) {
                 dayTextView.visibility = View.GONE
                 eventsColumns.elementAt(i).visibility = View.GONE
             } else {
@@ -138,7 +138,8 @@ class MultidayViewFragment : Fragment() {
 
     private fun getDayTextView(num: Int, dayDisplayLayout: LinearLayout): TextView {
         return dayDisplayLayout.findViewById<TextView>(
-            resources.getIdentifier("dayTextView$num", "id", context!!.packageName))
+            resources.getIdentifier("dayTextView$num", "id", context!!.packageName)
+        )
     }
 
     /**
