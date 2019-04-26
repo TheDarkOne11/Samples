@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.constraint.ConstraintSet
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -104,8 +105,8 @@ class WeekViewFragment : Fragment() {
 
         // Store references to dynamic event columns
         eventsColumns = listOf(
-            layout.eventColumn1, layout.eventColumn2, layout.eventColumn3, layout.eventColumn4,
-            layout.eventColumn5, layout.eventColumn6, layout.eventColumn7
+            layout.eventColumn0, layout.eventColumn1, layout.eventColumn2, layout.eventColumn3,
+            layout.eventColumn4, layout.eventColumn5, layout.eventColumn6
         )
 
         // Create rows
@@ -119,11 +120,11 @@ class WeekViewFragment : Fragment() {
 
         // Hide views according to the number of columns
         val dayDisplayLayout = layout.dayDisplay
-        for(i in (eventsColumnsCount + 1)..MAX_COLUMN) {
+        for(i in eventsColumnsCount until MAX_COLUMN) {
             dayDisplayLayout.findViewById<TextView>(resources.getIdentifier("dayTextView$i", "id", context!!.packageName))
                 .visibility = View.GONE
 
-            eventsColumns.elementAt(i - 1).visibility = View.GONE
+            eventsColumns.elementAt(i).visibility = View.GONE
         }
 
         createDummyEvents()
@@ -134,7 +135,7 @@ class WeekViewFragment : Fragment() {
 
     private fun getTimeRow(inflater: LayoutInflater, time: DateTime): View {
         val rowView = inflater.inflate(R.layout.week_row, null, false)
-        rowView.timeTextView.text = time.toString("HH:mm")
+//        rowView.timeTextView.text = time.toString("HH:mm")    // TODO: Enable
 
         val layoutParams =
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -142,15 +143,15 @@ class WeekViewFragment : Fragment() {
         layoutParams.height = (lessonLength * dpPerMinRatio).toFloat().toDp(context!!)
         rowView.layoutParams = layoutParams
 
-        for (i in 1..MAX_COLUMN) {
-//            Log.i("MY_test", "$i")
+        for (i in 0 until MAX_COLUMN) {
+            Log.i("MY_test", "$i")
 
             val emptySpace = rowView
                 .findViewById<View>(resources.getIdentifier("space$i", "id", context!!.packageName))
 
-            emptySpace.tag = time.plusDays(i - 1)
+            emptySpace.tag = time.plusDays(i)
 
-            if (i <= eventsColumnsCount) {
+            if (i < eventsColumnsCount) {
                 emptySpace.setOnClickListener(onEmptySpaceClickListener)
             } else {
                 // This column is not displayed at all
