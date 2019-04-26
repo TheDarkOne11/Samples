@@ -9,7 +9,7 @@
 
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" android:id="@+id/timetableHolder">
+            android:layout_height="wrap_content" android:id="@+id/timetableHolder">
 
         <LinearLayout
                 android:layout_height="wrap_content"
@@ -83,7 +83,8 @@
                 app:layout_constraintTop_toBottomOf="@id/dayDisplay"
                 app:layout_constraintStart_toEndOf="@+id/timesList"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="@id/rowsList" android:baselineAligned="false">
+                app:layout_constraintBottom_toBottomOf="@id/rowsList" android:baselineAligned="false"
+        >
 
             <android.support.constraint.ConstraintLayout
                     android:layout_width="0dp"
